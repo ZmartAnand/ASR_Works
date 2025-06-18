@@ -5,13 +5,13 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideAuth, getAuth } from '@angular/fire/auth';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 const firebaseConfig = {
-  apiKey: 'AIzaSyA5H83RJ-dr5DXGlCYJe8tmoLSRGE6ss3c',
-  authDomain: 'asr-works-e6863.firebaseapp.com',
-  projectId: 'asr-works-e6863',
-  storageBucket: 'asr-works-e6863.firebasestorage.app',
-  messagingSenderId: '568347989393',
-  appId: '1:568347989393:web:300d3ea5131e2e7fad3630',
-  measurementId: 'G-FLYP0DSZFC',
+  apiKey: 'AIzaSyD1z3OfBen-Otc6Cg_D5A1clT3o2HOGXU4',
+  authDomain: 'asr-works7377-c1385.firebaseapp.com',
+  projectId: 'asr-works7377-c1385',
+  storageBucket: 'asr-works7377-c1385.firebasestorage.app',
+  messagingSenderId: '869935470612',
+  appId: '1:869935470612:web:044d4484072ccf790a2f01',
+  measurementId: 'G-R5LH4YG9R6',
 };
 
 export const appConfig = [
