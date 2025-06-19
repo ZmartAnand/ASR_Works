@@ -21,7 +21,7 @@
                     placeholder="Enter product quantity" required [(ngModel)]="ProductQuantity" name="productquantity">
             </div>
             <button type="submit" class="btn btn-accent w-100 mt-2" (click)="save
-            ()">Save</button>
+            ()">{{ isEditMode ? 'Update' : 'Save' }}</button>
         </form>
     </div>
     <div>
@@ -30,15 +30,24 @@
               <thead>
                 <tr>
                   <th>S.No</th>
-                  <th>Name</th>
-                  <th>Age</th>
-                  <th>Mother Name</th>
-                  <th>Father Name</th>
+                  <th>Product Name</th>
+                  <th>Product Size</th>
+                  <th>Product Quantity</th>
                   <th>Option</th>
                 </tr>
               </thead>
-              <tbody id="userTableBody">
-        
+              <tbody>
+                <tr *ngFor="let product of productList">
+                  <td>{{ product.index }}</td>
+                  <td>{{ product.name }}</td>
+                  <td>{{ product.size }}</td>
+                  <td>{{ product.quantity }}</td>
+                  <td>
+                    <!-- Future: Add Edit/Delete buttons here -->
+                    <button class="btn btn-sm btn-success" (click)="editProduct(product)">Edit</button>
+                    <button class="btn btn-sm btn-danger" (click)="deleteProduct(product.id)">Delete</button>
+                  </td>
+                </tr>
               </tbody>
             </table>
           </section>
