@@ -11,6 +11,8 @@ import { doc, setDoc,Firestore,
   updateDoc,
   deleteDoc,
   onSnapshot, } from '@angular/fire/firestore';
+  import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 @Component({
   selector: 'app-sign-up',
@@ -19,13 +21,14 @@ import { doc, setDoc,Firestore,
   styleUrl: './sign-up.component.css'
 })
 export class SignUpComponent implements OnInit {
-    constructor(private firestore:Firestore){}
+    constructor(private firestore:Firestore ,private authService : AuthService){}
   ProductName = "";
   ProductSize = "";
   ProductQuantity = "";
   productList: any[] = [];
   isEditMode = false;
   currentEditId: string | null=null;
+  usercount = 1;
   resetForm() {
     this.ProductName = "";
     this.ProductSize = "";
@@ -63,29 +66,19 @@ export class SignUpComponent implements OnInit {
       quantity: +this.ProductQuantity, // convert string to number
       createdAt: new Date()
     };
-  
-    const productCollection = collection(this.firestore, 'products');
-  
-   
-  if (this.isEditMode && this.currentEditId) {
-    const docRef = doc(this.firestore, 'products', this.currentEditId);
-    updateDoc(docRef, productData)
-      .then(() => {
-        this.resetForm();
-      })
-      .catch((error) => {
-        console.error("Error updating product:", error);
-      });
-  } else {
-    addDoc(productCollection, {
-      ...productData,
-      createdAt: new Date()
-    }).then(() => {
-      this.resetForm();
-    }).catch((error) => {
-      console.error("Error adding product:", error);
-    });
-  }
+    if (this.isEditMode && this.currentEditId) {
+      this.authService.updateProduct(this.currentEditId, productData)
+        .then(() => {
+          this.resetForm();
+        })
+        .catch(error => console.error("Update error:", error));
+    } else {
+      this.authService.addProduct(productData)
+        .then(() => {
+          this.resetForm();
+        })
+        .catch(error => console.error("Add error:", error));
+    }
 }
 
 editProduct(product: any) {
@@ -96,13 +89,50 @@ editProduct(product: any) {
   this.isEditMode = true;
 }
 deleteProduct(id: string) {
-  const productDocRef = doc(this.firestore, 'products', id);
-  deleteDoc(productDocRef)
-    .then(() => {
-    })
-    .catch((error) => {
-      console.error("Error deleting product:", error);
-    });
+  if (confirm("Are you sure you want to delete this product?")) {
+    this.authService.deleteProduct(id)
+      .then(() => {
+      })
+      .catch(error => {
+        console.error("Error deleting product:", error);
+      });
+  }
 }
+exportToPDF(): void {
+  if (this.productList.length === 0) {
+    alert('No data to export.');
+    return;
+  }
+
+  const doc = new jsPDF();
+
+  // Title
+  doc.setFontSize(18);
+  doc.text('ASR Product List', 14, 15);
+
+  // Prepare table columns and data
+  const head = [['S.No', 'Product Name', 'Product Size', 'Product Quantity']];
+  const data = this.productList.map(product => [
+    product.index,
+    product.name,
+    product.size,
+    product.quantity
+  ]);
+
+  // Create table
+  autoTable(doc, {
+    startY: 25,
+    head: head,
+    body: data,
+    theme: 'grid',
+    headStyles: { fillColor: [40, 40, 40], textColor: [255, 255, 255] },
+    alternateRowStyles: { fillColor: [240, 240, 240] },
+    styles: { fontSize: 11 }
+  });
+  this.usercount++;
+  // Save PDF
+  doc.save('ASR_Products_' + "customer_"+this.usercount + '.pdf');
+}
+
 
 }
