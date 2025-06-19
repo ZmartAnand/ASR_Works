@@ -20,12 +20,13 @@
                 <input type="number" id="productquantity" min="1" class="form-control dark-input"
                     placeholder="Enter product quantity" required [(ngModel)]="ProductQuantity" name="productquantity">
             </div>
-            <button type="submit" class="btn btn-accent w-100 mt-2" (click)="save
+            <button type="button" class="btn btn-accent w-100 mt-2" (click)="save
             ()">{{ isEditMode ? 'Update' : 'Save' }}</button>
         </form>
     </div>
     <div>
         <section hidden id="tablesection">
+
             <table style="color: white;font-weight: bold;">
               <thead>
                 <tr>

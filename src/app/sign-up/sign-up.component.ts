@@ -18,7 +18,7 @@ import { doc, setDoc,Firestore,
   templateUrl: './sign-up.component.html',
   styleUrl: './sign-up.component.css'
 })
-export class SignUpComponent {
+export class SignUpComponent implements OnInit {
     constructor(private firestore:Firestore){}
   ProductName = "";
   ProductSize = "";
