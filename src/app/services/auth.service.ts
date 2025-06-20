@@ -1,11 +1,21 @@
 import { Injectable } from '@angular/core';
-import { doc, setDoc , Firestore, collection, addDoc, updateDoc, deleteDoc,onSnapshot ,query,orderBy} from '@angular/fire/firestore';
+import {
+  doc,
+  setDoc,
+  Firestore,
+  collection,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  onSnapshot,
+  query,
+  orderBy,
+} from '@angular/fire/firestore';
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-
-  constructor(private firestore : Firestore) {}
+  constructor(private firestore: Firestore) {}
   addProduct(product: any) {
     const productCollection = collection(this.firestore, 'products');
     return addDoc(productCollection, product);
@@ -24,7 +34,7 @@ export class AuthService {
   listenToProducts(callback: (products: any[]) => void) {
     const productCollection = collection(this.firestore, 'products');
     const q = query(productCollection, orderBy('createdAt', 'asc')); // 👈 Order by creation time ascending
-  
+
     onSnapshot(q, (snapshot) => {
       const products: any[] = [];
       snapshot.forEach((doc) => {
@@ -33,5 +43,4 @@ export class AuthService {
       callback(products);
     });
   }
-  
 }
