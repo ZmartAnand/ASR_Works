@@ -93,3 +93,21 @@ body {
   td button:first-child:hover {
     background-color: #388e3c;
   }
+  .custom-pdf-btn {
+    background-color: #e63946;
+    color: white;
+    border: 2px solid #e63946;
+    padding: 10px 20px;
+    font-weight: 600;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(230, 57, 70, 0.3);
+  }
+  
+  .custom-pdf-btn:hover {
+    background-color: #fff;
+    color: #e63946;
+    border-color: #e63946;
+    box-shadow: 0 6px 15px rgba(230, 57, 70, 0.5);
+    transform: translateY(-2px);
+  }

@@ -21,118 +21,107 @@ import autoTable from 'jspdf-autotable';
   styleUrl: './sign-up.component.css'
 })
 export class SignUpComponent implements OnInit {
-    constructor(private firestore:Firestore ,private authService : AuthService){}
-  ProductName = "";
-  ProductSize = "";
-  ProductQuantity = "";
-  productList: any[] = [];
+  ProductName = '';
+  ProductSize = '';
+  ProductQuantity = '';
   isEditMode = false;
-  currentEditId: string | null=null;
-  usercount = 1;
-  resetForm() {
-    this.ProductName = "";
-    this.ProductSize = "";
-    this.ProductQuantity = "";
-    this.isEditMode = false;
-    this.currentEditId = null;
-  }
+  productIdToEdit: string | null = null;
+  existingCreatedAt: any = null;
+  products: any[] = [];
+  usercount:number=1;
+  constructor(private authService: AuthService) {}
+
   ngOnInit(): void {
-    const productCollection = collection(this.firestore, 'products');
+    this.authService.listenToProducts((products) => {
+      this.products = products;
 
-    onSnapshot(productCollection, (snapshot) => {
-      this.productList = snapshot.docs.map((doc, index) => ({
-        id: doc.id,
-        index: index + 1,
-        ...doc.data()
-      }));
-
-      // Show the table only when data exists
-      const section = document.getElementById("tablesection");
-      if (section) {
-        section.hidden = this.productList.length === 0;
+      const tableSection = document.getElementById('tablesection');
+      if (tableSection) {
+        tableSection.hidden = this.products.length === 0;
       }
     });
   }
 
-  save(){
+  save() {
     if (!this.ProductName || !this.ProductSize || !this.ProductQuantity) {
-      alert("Please fill all fields");
+      alert('Please fill all fields');
       return;
     }
-  
+
     const productData = {
       name: this.ProductName,
       size: this.ProductSize,
-      quantity: +this.ProductQuantity, // convert string to number
-      createdAt: new Date()
+      quantity: +this.ProductQuantity,
+      createdAt: this.existingCreatedAt || new Date()  // 👈 Preserve if editing
     };
-    if (this.isEditMode && this.currentEditId) {
-      this.authService.updateProduct(this.currentEditId, productData)
+
+    if (this.isEditMode && this.productIdToEdit) {
+      this.authService
+        .updateProduct(this.productIdToEdit, productData)
         .then(() => {
           this.resetForm();
-        })
-        .catch(error => console.error("Update error:", error));
+        });
     } else {
-      this.authService.addProduct(productData)
-        .then(() => {
-          this.resetForm();
-        })
-        .catch(error => console.error("Add error:", error));
-    }
-}
-
-editProduct(product: any) {
-  this.ProductName = product.name;
-  this.ProductSize = product.size;
-  this.ProductQuantity = product.quantity;
-  this.currentEditId = product.id;
-  this.isEditMode = true;
-}
-deleteProduct(id: string) {
-  if (confirm("Are you sure you want to delete this product?")) {
-    this.authService.deleteProduct(id)
-      .then(() => {
-      })
-      .catch(error => {
-        console.error("Error deleting product:", error);
+      this.authService.addProduct(productData).then(() => {
+        this.resetForm();
       });
-  }
-}
-exportToPDF(): void {
-  if (this.productList.length === 0) {
-    alert('No data to export.');
-    return;
+    }
   }
 
-  const doc = new jsPDF();
+  editProduct(product: any) {
+    this.ProductName = product.name;
+    this.ProductSize = product.size;
+    this.ProductQuantity = product.quantity;
+    this.productIdToEdit = product.id;
+    this.existingCreatedAt = product.createdAt;  // 👈 store original timestamp
+    this.isEditMode = true;
+  }
 
-  // Title
+  deleteProduct(id: string) {
+    if (confirm('Are you sure you want to delete?')) {
+      this.authService.deleteProduct(id).then(() => {
+      });
+    }
+  }
+
+  resetForm() {
+    this.ProductName = '';
+    this.ProductSize = '';
+    this.ProductQuantity = '';
+    this.isEditMode = false;
+    this.productIdToEdit = null;
+    this.existingCreatedAt = null;
+  }
+
+
+
+  exportToPDF(): void {
+    const doc = new jsPDF();
+
+    // Title
   doc.setFontSize(18);
   doc.text('ASR Product List', 14, 15);
 
-  // Prepare table columns and data
-  const head = [['S.No', 'Product Name', 'Product Size', 'Product Quantity']];
-  const data = this.productList.map(product => [
-    product.index,
-    product.name,
-    product.size,
-    product.quantity
-  ]);
-
-  // Create table
-  autoTable(doc, {
-    startY: 25,
-    head: head,
-    body: data,
-    theme: 'grid',
+    autoTable(doc, {
+      startY:25,
+      head: [['S.No', 'Product Name', 'Product Size', 'Product Quantity']],
+      body: this.products.map((prod, i) => [
+        i + 1,
+        prod.name,
+        prod.size,
+        prod.quantity,
+        
+      ]),
+      theme: 'grid',
     headStyles: { fillColor: [40, 40, 40], textColor: [255, 255, 255] },
     alternateRowStyles: { fillColor: [240, 240, 240] },
     styles: { fontSize: 11 }
-  });
-  this.usercount++;
-  // Save PDF
-  doc.save('ASR_Products_' + "customer_"+this.usercount + '.pdf');
-}
+
+
+    });
+    this.usercount++;
+    doc.save('ASR_Products_' + "customer_"+this.usercount + '.pdf');
+  }
 
 
 }

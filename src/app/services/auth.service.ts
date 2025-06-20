@@ -1,27 +1,37 @@
 import { Injectable } from '@angular/core';
-import { doc, setDoc , Firestore, collection, addDoc, updateDoc, deleteDoc } from '@angular/fire/firestore';
+import { doc, setDoc , Firestore, collection, addDoc, updateDoc, deleteDoc,onSnapshot ,query,orderBy} from '@angular/fire/firestore';
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
   constructor(private firestore : Firestore) {}
-
-  addProduct(productData: any) {
+  addProduct(product: any) {
     const productCollection = collection(this.firestore, 'products');
-    return addDoc(productCollection, {
-      ...productData,
-      createdAt: new Date()
-    });
+    return addDoc(productCollection, product);
   }
 
-  updateProduct(id: string, productData: any) {
-    const productDoc = doc(this.firestore, 'products', id);
-    return updateDoc(productDoc, productData);
+  updateProduct(id: string, product: any) {
+    const productDocRef = doc(this.firestore, 'products', id);
+    return updateDoc(productDocRef, product);
   }
 
   deleteProduct(id: string) {
-    const productDoc = doc(this.firestore, 'products', id);
-    return deleteDoc(productDoc);
+    const productDocRef = doc(this.firestore, 'products', id);
+    return deleteDoc(productDocRef);
   }
+
+  listenToProducts(callback: (products: any[]) => void) {
+    const productCollection = collection(this.firestore, 'products');
+    const q = query(productCollection, orderBy('createdAt', 'asc')); // 👈 Order by creation time ascending
+  
+    onSnapshot(q, (snapshot) => {
+      const products: any[] = [];
+      snapshot.forEach((doc) => {
+        products.push({ id: doc.id, ...doc.data() });
+      });
+      callback(products);
+    });
+  }
+  
 }
