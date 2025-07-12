@@ -107,4 +107,31 @@ export class SignUpComponent implements OnInit {
     this.usercount++;
     doc.save('ASR_Products_' + 'customer_' + this.usercount + '.pdf');
   }
+
+  searchTerm: string = '';
+
+filteredProducts(): any[] {
+  if (!this.searchTerm.trim()) return this.products;
+
+  // Prioritize matches at the top (case-insensitive "includes" search)
+  const lowerTerm = this.searchTerm.toLowerCase();
+
+  const matched = this.products.filter(p =>
+    p.name.toLowerCase().includes(lowerTerm)
+  );
+
+  const unmatched = this.products.filter(p =>
+    !p.name.toLowerCase().includes(lowerTerm)
+  );
+
+  return [...matched, ...unmatched]; // matched on top, rest below
+}
+
+highlightMatch(text: string, term: string): string {
+  if (!term) return text;
+  const re = new RegExp(`(${term})`, 'gi');
+  return text.replace(re, `<mark>$1</mark>`);
+}
+
+
 }

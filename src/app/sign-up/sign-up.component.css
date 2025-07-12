@@ -110,3 +110,9 @@ td button:first-child:hover {
   box-shadow: 0 6px 15px rgba(230, 57, 70, 0.5);
   transform: translateY(-2px);
 }
+mark {
+  background-color: yellow;
+  color: black;
+  padding: 0 2px;
+  border-radius: 2px;
+}
