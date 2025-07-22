@@ -20,40 +20,48 @@
         <input type="number" id="productquantity" min="1" class="form-control dark-input"
           placeholder="Enter product quantity" required [(ngModel)]="ProductQuantity" name="productquantity">
       </div>
+
+      <div class="mb-3">
+        <label for="productdate" class="form-label">Date</label>
+        <input type="date" id="productdate" class="form-control dark-input" [(ngModel)]="ProductDate"
+          name="productdate">
+      </div>
+
       <button type="button" class="btn btn-accent w-100 mt-2" (click)="save
             ()">{{ isEditMode ? 'Update' : 'Save' }}</button>
     </form>
   </div>
   <div>
-   
-    
+
+
     <section hidden id="tablesection">
       <div class="mb-3 d-flex gap-2 flex-wrap ">
-        <input
-          type="text"
-          class="form-control bg-black text-white"
-          placeholder="Search product name"
-          [(ngModel)]="searchTerm"
-        />
+        <input type="text" class="form-control bg-black text-white" placeholder="Search product name"
+          [(ngModel)]="searchTerm" />
+      </div>
+
+      <div *ngIf="filteredProducts().length === 0" class="text-danger mb-3">
+        No products found.
       </div>
 
       <table style="color: white;font-weight: bold;">
         <thead>
           <tr>
             <th>S.No</th>
+            <th>Date</th>
             <th>Product Name</th>
-            <th>Product Size</th>
             <th>Product Quantity</th>
+            <th>Product Size</th>
             <th>Option</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let product of filteredProducts(); let i = index">
             <td>{{ i + 1 }}</td>
+            <td>{{ product.date || '—' }}</td>
             <td [innerHTML]="highlightMatch(product.name, searchTerm)"></td>
-
-            <td>{{ product.size }}</td>
             <td>{{ product.quantity }}</td>
+            <td>{{ product.size }}</td>
             <td>
               <button class="btn btn-sm btn-success" (click)="editProduct(product)">
                 <i class="bi bi-pencil-square"></i>
@@ -63,9 +71,10 @@
               </button>
             </td>
           </tr>
-          
+
+
         </tbody>
-        
+
       </table>
       <button class="btn custom-pdf-btn mb-3 mt-2" (click)="exportToPDF()">
         <i class="bi bi-file-earmark-pdf"></i> Export to PDF

@@ -19,6 +19,7 @@ export class SignUpComponent implements OnInit {
   productIdToEdit: string | null = null;
   existingCreatedAt: any = null;
   products: any[] = [];
+  ProductDate: string = '';
   usercount: number = 1;
   constructor(private authService: AuthService) {}
 
@@ -43,6 +44,7 @@ export class SignUpComponent implements OnInit {
       name: this.ProductName,
       size: this.ProductSize,
       quantity: +this.ProductQuantity,
+      date: this.ProductDate || '',
       createdAt: this.existingCreatedAt || new Date(), // Preserve if editing
     };
 
@@ -64,6 +66,7 @@ export class SignUpComponent implements OnInit {
     this.ProductSize = product.size;
     this.ProductQuantity = product.quantity;
     this.productIdToEdit = product.id;
+      this.ProductDate = product.date || '';
     this.existingCreatedAt = product.createdAt; // store original timestamp
     this.isEditMode = true;
   }
@@ -78,6 +81,7 @@ export class SignUpComponent implements OnInit {
     this.ProductName = '';
     this.ProductSize = '';
     this.ProductQuantity = '';
+    this.ProductDate = '';
     this.isEditMode = false;
     this.productIdToEdit = null;
     this.existingCreatedAt = null;
@@ -132,6 +136,5 @@ highlightMatch(text: string, term: string): string {
   const re = new RegExp(`(${term})`, 'gi');
   return text.replace(re, `<mark>$1</mark>`);
 }
-
 
 }
