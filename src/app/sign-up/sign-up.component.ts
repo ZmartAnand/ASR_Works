@@ -13,7 +13,7 @@ import autoTable from 'jspdf-autotable';
 })
 export class SignUpComponent implements OnInit {
   ProductName = '';
-  ProductSize = '';
+  ProductPrice= '';
   ProductQuantity = '';
   isEditMode = false;
   productIdToEdit: string | null = null;
@@ -35,14 +35,14 @@ export class SignUpComponent implements OnInit {
   }
 
   save() {
-    if (!this.ProductName || !this.ProductSize || !this.ProductQuantity) {
+    if (!this.ProductName || !this.ProductPrice || !this.ProductQuantity) {
       alert('Please fill all fields');
       return;
     }
 
     const productData = {
       name: this.ProductName,
-      size: this.ProductSize,
+      price: this.ProductPrice,
       quantity: +this.ProductQuantity,
       date: this.ProductDate || '',
       createdAt: this.existingCreatedAt || new Date(), // Preserve if editing
@@ -63,7 +63,7 @@ export class SignUpComponent implements OnInit {
 
   editProduct(product: any) {
     this.ProductName = product.name;
-    this.ProductSize = product.size;
+    this.ProductPrice = product.price;
     this.ProductQuantity = product.quantity;
     this.productIdToEdit = product.id;
       this.ProductDate = product.date || '';
@@ -79,7 +79,7 @@ export class SignUpComponent implements OnInit {
 
   resetForm() {
     this.ProductName = '';
-    this.ProductSize = '';
+    this.ProductPrice = '';
     this.ProductQuantity = '';
     this.ProductDate = '';
     this.isEditMode = false;
@@ -96,11 +96,11 @@ export class SignUpComponent implements OnInit {
 
     autoTable(doc, {
       startY: 25,
-      head: [['S.No', 'Product Name', 'Product Size', 'Product Quantity']],
+      head: [['S.No', 'Product Name', 'Product Price', 'Product Quantity']],
       body: this.products.map((prod, i) => [
         i + 1,
         prod.name,
-        prod.size,
+        prod.price,
         prod.quantity,
       ]),
       theme: 'grid',

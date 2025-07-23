@@ -10,9 +10,9 @@
       </div>
 
       <div class="mb-3">
-        <label for="productsize" class="form-label">Product Size </label>
-        <input type="text" id="productsize" class="form-control dark-input" placeholder="Enter product size" required
-          [(ngModel)]="ProductSize" name="productsize">
+        <label for="productprice" class="form-label">Product Price </label>
+        <input type="text" id="productsize" class="form-control dark-input" placeholder="Enter product price" required
+          [(ngModel)]="ProductPrice" name="productprice">
       </div>
 
       <div class="mb-3">
@@ -27,8 +27,8 @@
           name="productdate">
       </div>
 
-      <button type="button" class="btn btn-accent w-100 mt-2" (click)="save
-            ()">{{ isEditMode ? 'Update' : 'Save' }}</button>
+      <button type="button" class="btn btn-accent w-100 mt-2" (click)="save()">
+        {{ isEditMode ? 'Update' : 'Save' }}</button>
     </form>
   </div>
   <div>
@@ -51,8 +51,8 @@
             <th>Date</th>
             <th>Product Name</th>
             <th>Product Quantity</th>
-            <th>Product Size</th>
-            <th>Option</th>
+            <th>Product Price</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -61,7 +61,7 @@
             <td>{{ product.date || '—' }}</td>
             <td [innerHTML]="highlightMatch(product.name, searchTerm)"></td>
             <td>{{ product.quantity }}</td>
-            <td>{{ product.size }}</td>
+            <td>{{ product.price }}</td>
             <td>
               <button class="btn btn-sm btn-success" (click)="editProduct(product)">
                 <i class="bi bi-pencil-square"></i>
