@@ -3,6 +3,14 @@
     <h3 class="text-center mb-4 fw-bold">ASR FORM</h3>
 
     <form autocomplete="off">
+
+      <!-- <div class="mb-3">
+        <label for="customerName" class="form-label">Customer Name</label>
+        <input type="text" id="customerName" class="form-control dark-input" placeholder="Enter customer name"
+          [(ngModel)]="customerName" name="customerName" required />
+      </div> -->
+
+
       <div class="mb-3">
         <label for="productname" class="form-label">Product Name</label>
         <input type="text" id="productname" class="form-control dark-input" placeholder="Enter product name " required
@@ -58,10 +66,11 @@
         <tbody>
           <tr *ngFor="let product of filteredProducts(); let i = index">
             <td>{{ i + 1 }}</td>
-            <td>{{ product.date || '—' }}</td>
-            <td [innerHTML]="highlightMatch(product.name, searchTerm)"></td>
-            <td>{{ product.quantity }}</td>
-            <td>{{ product.price }}</td>
+            <td>{{ product.Date || '—' }}</td>
+            <td [innerHTML]="highlightMatch(product.Product_Name, searchTerm)"></td>
+            <td>{{ product.Product_Quantity }}</td>
+            <td>{{ product.Product_Price }}</td>
+
             <td>
               <button class="btn btn-sm btn-success" (click)="editProduct(product)">
                 <i class="bi bi-pencil-square"></i>
@@ -70,6 +79,10 @@
                 <i class="bi bi-trash3-fill"></i>
               </button>
             </td>
+          </tr>
+          <tr>
+            <td colspan="5"><strong>Total Amount ( &#8377;) </strong></td>
+            <td>Rs.{{ getTotalPrice() }}</td>
           </tr>
 
 

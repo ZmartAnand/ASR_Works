@@ -4,6 +4,7 @@ import { AuthService } from '../services/auth.service';
 import { FormsModule } from '@angular/forms';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { serverTimestamp } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-sign-up',
@@ -12,24 +13,25 @@ import autoTable from 'jspdf-autotable';
   styleUrl: './sign-up.component.css',
 })
 export class SignUpComponent implements OnInit {
+  // customerName='';
   ProductName = '';
-  ProductPrice= '';
+  ProductPrice = '';
   ProductQuantity = '';
   isEditMode = false;
   productIdToEdit: string | null = null;
   existingCreatedAt: any = null;
-  products: any[] = [];
+  Customers: any[] = [];
   ProductDate: string = '';
   usercount: number = 1;
   constructor(private authService: AuthService) {}
 
   ngOnInit(): void {
-    this.authService.listenToProducts((products) => {
-      this.products = products;
+    this.authService.listenToProducts((customers) => {
+      this.Customers = customers;
 
       const tableSection = document.getElementById('tablesection');
       if (tableSection) {
-        tableSection.hidden = this.products.length === 0;
+        tableSection.hidden = this.Customers.length === 0;
       }
     });
   }
@@ -40,33 +42,34 @@ export class SignUpComponent implements OnInit {
       return;
     }
 
-    const productData = {
-      name: this.ProductName,
-      price: this.ProductPrice,
-      quantity: +this.ProductQuantity,
-      date: this.ProductDate || '',
-      createdAt: this.existingCreatedAt || new Date(), // Preserve if editing
+    const CustomerData = {
+      Product_Name: this.ProductName,
+      Product_Price: this.ProductPrice,
+      Product_Quantity: +this.ProductQuantity,
+      Date: this.ProductDate || '',
+      createdAt: this.existingCreatedAt || serverTimestamp(),
     };
 
     if (this.isEditMode && this.productIdToEdit) {
       this.authService
-        .updateProduct(this.productIdToEdit, productData)
+        .updateProduct(this.productIdToEdit, CustomerData)
         .then(() => {
           this.resetForm();
         });
     } else {
-      this.authService.addProduct(productData).then(() => {
+      this.authService.addProduct(CustomerData).then(() => {
         this.resetForm();
       });
     }
   }
 
   editProduct(product: any) {
-    this.ProductName = product.name;
-    this.ProductPrice = product.price;
-    this.ProductQuantity = product.quantity;
+    // this.customerName=product.customername;
+    this.ProductName = product.Product_Name;
+    this.ProductPrice = product.Product_Price;
+    this.ProductQuantity = product.Product_Quantity;
+    this.ProductDate = product.Date || '';
     this.productIdToEdit = product.id;
-      this.ProductDate = product.date || '';
     this.existingCreatedAt = product.createdAt; // store original timestamp
     this.isEditMode = true;
   }
@@ -78,6 +81,7 @@ export class SignUpComponent implements OnInit {
   }
 
   resetForm() {
+    // this.customerName='';
     this.ProductName = '';
     this.ProductPrice = '';
     this.ProductQuantity = '';
@@ -97,7 +101,7 @@ export class SignUpComponent implements OnInit {
     autoTable(doc, {
       startY: 25,
       head: [['S.No', 'Product Name', 'Product Price', 'Product Quantity']],
-      body: this.products.map((prod, i) => [
+      body: this.Customers.map((prod, i) => [
         i + 1,
         prod.name,
         prod.price,
@@ -114,27 +118,36 @@ export class SignUpComponent implements OnInit {
 
   searchTerm: string = '';
 
-filteredProducts(): any[] {
-  if (!this.searchTerm.trim()) return this.products;
+  filteredProducts(): any[] {
+    if (!this.searchTerm.trim()) return this.Customers;
 
-  // Prioritize matches at the top (case-insensitive "includes" search)
-  const lowerTerm = this.searchTerm.toLowerCase();
+    // Prioritize matches at the top (case-insensitive "includes" search)
+    const lowerTerm = this.searchTerm.toLowerCase();
 
-  const matched = this.products.filter(p =>
-    p.name.toLowerCase().includes(lowerTerm)
-  );
+    const matched = this.Customers.filter((p) =>
+      p.name.toLowerCase().includes(lowerTerm)
+    );
 
-  const unmatched = this.products.filter(p =>
-    !p.name.toLowerCase().includes(lowerTerm)
-  );
+    const unmatched = this.Customers.filter(
+      (p) => !p.name.toLowerCase().includes(lowerTerm)
+    );
 
-  return [...matched, ...unmatched]; // matched on top, rest below
-}
+    return [...matched, ...unmatched]; // matched on top, rest below
+  }
 
-highlightMatch(text: string, term: string): string {
-  if (!term) return text;
-  const re = new RegExp(`(${term})`, 'gi');
-  return text.replace(re, `<mark>$1</mark>`);
-}
+  highlightMatch(text: string, term: string): string {
+    if (!term) return text;
+    const re = new RegExp(`(${term})`, 'gi');
+    return text.replace(re, `<mark>$1</mark>`);
+  }
 
+  getTotalPrice(): number {
+    return this.filteredProducts().reduce((sum, p) => sum + Number(p.Product_Price), 0);
+  }
+
+
+
+
+
+  
 }

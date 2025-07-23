@@ -16,31 +16,31 @@ import {
 })
 export class AuthService {
   constructor(private firestore: Firestore) {}
-  addProduct(product: any) {
-    const productCollection = collection(this.firestore, 'products');
-    return addDoc(productCollection, product);
+  addProduct(user: any) {
+    const CustomerCollection = collection(this.firestore, 'Customer Details');
+    return addDoc(CustomerCollection, user);
   }
 
-  updateProduct(id: string, product: any) {
-    const productDocRef = doc(this.firestore, 'products', id);
-    return updateDoc(productDocRef, product);
+  updateProduct(id: string, user: any) {
+    const CustomerDocRef = doc(this.firestore, 'Customer Details', id);
+    return updateDoc(CustomerDocRef, user);
   }
 
   deleteProduct(id: string) {
-    const productDocRef = doc(this.firestore, 'products', id);
-    return deleteDoc(productDocRef);
+    const CustomerDocRef = doc(this.firestore, 'Customer Details', id);
+    return deleteDoc(CustomerDocRef);
   }
 
-  listenToProducts(callback: (products: any[]) => void) {
-    const productCollection = collection(this.firestore, 'products');
-    const q = query(productCollection, orderBy('createdAt', 'asc')); // 👈 Order by creation time ascending
+  listenToProducts(callback: (customer: any[]) => void) {
+    const CustomerCollection = collection(this.firestore, 'Customer Details');
+    const q = query(CustomerCollection, orderBy('createdAt', 'asc')); // 👈 Order by creation time ascending
 
     onSnapshot(q, (snapshot) => {
-      const products: any[] = [];
+      const customer: any[] = [];
       snapshot.forEach((doc) => {
-        products.push({ id: doc.id, ...doc.data() });
+        customer.push({ id: doc.id, ...doc.data() });
       });
-      callback(products);
+      callback(customer);
     });
   }
 }
