@@ -30,7 +30,6 @@ export class AuthService {
     const CustomerDocRef = doc(this.firestore, 'Customer Details', id);
     return deleteDoc(CustomerDocRef);
   }
-
   listenToProducts(callback: (customer: any[]) => void) {
     const CustomerCollection = collection(this.firestore, 'Customer Details');
     const q = query(CustomerCollection, orderBy('createdAt', 'asc')); // 👈 Order by creation time ascending

@@ -103,9 +103,9 @@ export class SignUpComponent implements OnInit {
       head: [['S.No', 'Product Name', 'Product Price', 'Product Quantity']],
       body: this.Customers.map((prod, i) => [
         i + 1,
-        prod.name,
-        prod.price,
-        prod.quantity,
+        prod.Product_Name,
+        prod.Product_Price,
+        prod.Product_Quantity,
       ]),
       theme: 'grid',
       headStyles: { fillColor: [40, 40, 40], textColor: [255, 255, 255] },
@@ -125,11 +125,11 @@ export class SignUpComponent implements OnInit {
     const lowerTerm = this.searchTerm.toLowerCase();
 
     const matched = this.Customers.filter((p) =>
-      p.name.toLowerCase().includes(lowerTerm)
+      p.Product_Name.toLowerCase().includes(lowerTerm)
     );
 
     const unmatched = this.Customers.filter(
-      (p) => !p.name.toLowerCase().includes(lowerTerm)
+      (p) => !p.Product_Name.toLowerCase().includes(lowerTerm)
     );
 
     return [...matched, ...unmatched]; // matched on top, rest below
