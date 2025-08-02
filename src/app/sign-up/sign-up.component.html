@@ -1,25 +1,18 @@
-<div class="container-fluid d-flex align-items-center justify-content-center min-vh-100 bg-dark text-white flex-column">
-  <div class="card neon-card text-white p-4 border-0" style="width: 100%; max-width: 420px;">
+<div class="container-fluid d-flex align-items-center justify-content-center min-vh-100 bg-dark text-white flex-column p-3">
+  <div class="card neon-card text-white p-4 border-0 w-100" style="max-width: 420px;">
     <h3 class="text-center mb-4 fw-bold">ASR FORM</h3>
 
     <form autocomplete="off">
 
-      <!-- <div class="mb-3">
-        <label for="customerName" class="form-label">Customer Name</label>
-        <input type="text" id="customerName" class="form-control dark-input" placeholder="Enter customer name"
-          [(ngModel)]="customerName" name="customerName" required />
-      </div> -->
-
-
       <div class="mb-3">
         <label for="productname" class="form-label">Product Name</label>
-        <input type="text" id="productname" class="form-control dark-input" placeholder="Enter product name " required
+        <input type="text" id="productname" class="form-control dark-input" placeholder="Enter product name" required
           [(ngModel)]="ProductName" name="productname">
       </div>
 
       <div class="mb-3">
         <label for="productprice" class="form-label">Product Price </label>
-        <input type="text" id="productsize" class="form-control dark-input" placeholder="Enter product price" required
+        <input type="text" id="productprice" class="form-control dark-input" placeholder="Enter product price" required
           [(ngModel)]="ProductPrice" name="productprice">
       </div>
 
@@ -36,14 +29,15 @@
       </div>
 
       <button type="button" class="btn btn-accent w-100 mt-2" (click)="save()">
-        {{ isEditMode ? 'Update' : 'Save' }}</button>
+        {{ isEditMode ? 'Update' : 'Save' }}
+      </button>
     </form>
   </div>
-  <div>
 
-
+  <div class="mt-4 w-100" style="max-width: 900px;">
     <section hidden id="tablesection">
-      <div class="mb-3 d-flex gap-2 flex-wrap ">
+
+      <div class="mb-3 d-flex gap-2 flex-wrap">
         <input type="text" class="form-control bg-black text-white" placeholder="Search product name"
           [(ngModel)]="searchTerm" />
       </div>
@@ -52,46 +46,47 @@
         No products found.
       </div>
 
-      <table style="color: white;font-weight: bold;">
-        <thead>
-          <tr>
-            <th>S.No</th>
-            <th>Date</th>
-            <th>Product Name</th>
-            <th>Product Quantity</th>
-            <th>Product Price</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let product of filteredProducts(); let i = index">
-            <td>{{ i + 1 }}</td>
-            <td>{{ product.Date || '—' }}</td>
-            <td [innerHTML]="highlightMatch(product.Product_Name, searchTerm)"></td>
-            <td>{{ product.Product_Quantity }}</td>
-            <td>{{ product.Product_Price }}</td>
+      <div class="table-responsive">
+        <table class="table table-dark table-striped table-bordered align-middle text-center">
+          <thead class="table-info text-dark">
+            <tr>
+              <th>S.No</th>
+              <th>Date</th>
+              <th>Product Name</th>
+              <th>Qty</th>
+              <th>Price</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let product of filteredProducts(); let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>{{ product.Date || '—' }}</td>
+              <td [innerHTML]="highlightMatch(product.Product_Name, searchTerm)"></td>
+              <td>{{ product.Product_Quantity }}</td>
+              <td>{{ product.Product_Price }}</td>
 
-            <td>
-              <button class="btn btn-sm btn-success" (click)="editProduct(product)">
-                <i class="bi bi-pencil-square"></i>
-              </button>
-              <button class="btn btn-sm btn-danger" (click)="deleteProduct(product.id)">
-                <i class="bi bi-trash3-fill"></i>
-              </button>
-            </td>
-          </tr>
-          <tr>
-            <td colspan="5"><strong>Total Amount ( &#8377;) </strong></td>
-            <td>Rs.{{ getTotalPrice() }}</td>
-          </tr>
+              <td class="d-flex justify-content-center gap-1 flex-wrap">
+                <button class="btn btn-sm btn-success" (click)="editProduct(product)">
+                  <i class="bi bi-pencil-square"></i>
+                </button>
+                <button class="btn btn-sm btn-danger" (click)="deleteProduct(product.id)">
+                  <i class="bi bi-trash3-fill"></i>
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="5"><strong>Total Amount (₹) </strong></td>
+              <td>Rs.{{ getTotalPrice() }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-
-        </tbody>
-
-      </table>
-      <button class="btn custom-pdf-btn mb-3 mt-2" (click)="exportToPDF()">
+      <button class="btn custom-pdf-btn mb-3 mt-2 w-100" (click)="exportToPDF()">
         <i class="bi bi-file-earmark-pdf"></i> Export to PDF
       </button>
+
     </section>
   </div>
 </div>
