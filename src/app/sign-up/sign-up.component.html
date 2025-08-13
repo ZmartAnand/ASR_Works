@@ -1,4 +1,5 @@
-<div class="container-fluid d-flex align-items-center justify-content-center min-vh-100 bg-dark text-white flex-column p-3">
+<div
+  class="container-fluid d-flex align-items-center justify-content-center min-vh-100 bg-dark text-white flex-column p-3">
   <div class="card neon-card text-white p-4 border-0 w-100" style="max-width: 420px;">
     <h3 class="text-center mb-4 fw-bold">ASR FORM</h3>
 
@@ -19,7 +20,7 @@
       <div class="mb-3">
         <label for="productquantity" class="form-label">Product Quantity </label>
         <input type="number" id="productquantity" min="1" class="form-control dark-input"
-          placeholder="Enter product quantity" required [(ngModel)]="ProductQuantity" name="productquantity">
+          placeholder="Enter product quantity" [(ngModel)]="ProductQuantity" name="productquantity">
       </div>
 
       <div class="mb-3">
@@ -61,7 +62,7 @@
           <tbody>
             <tr *ngFor="let product of filteredProducts(); let i = index">
               <td>{{ i + 1 }}</td>
-              <td>{{ product.Date || '—' }}</td>
+              <td>{{ product.Date ? (product.Date | date:'dd/MM/yy') : '—' }}</td>
               <td [innerHTML]="highlightMatch(product.Product_Name, searchTerm)"></td>
               <td>{{ product.Product_Quantity }}</td>
               <td>{{ product.Product_Price }}</td>
@@ -76,8 +77,8 @@
               </td>
             </tr>
             <tr>
-              <td colspan="5"><strong>Total Amount (₹) </strong></td>
-              <td>Rs.{{ getTotalPrice() }}</td>
+              <td colspan="4"><strong>Total Amount (₹) </strong></td>
+              <td colspan="2">Rs.{{ getTotalPrice() }}</td>
             </tr>
           </tbody>
         </table>

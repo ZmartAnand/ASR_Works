@@ -37,7 +37,7 @@ export class SignUpComponent implements OnInit {
   }
 
   save() {
-    if (!this.ProductName || !this.ProductPrice || !this.ProductQuantity) {
+    if (!this.ProductName || !this.ProductPrice) {
       alert('Please fill all fields');
       return;
     }
@@ -90,31 +90,58 @@ export class SignUpComponent implements OnInit {
     this.productIdToEdit = null;
     this.existingCreatedAt = null;
   }
-
-  exportToPDF(): void {
-    const doc = new jsPDF();
-
-    // Title
-    doc.setFontSize(18);
-    doc.text('ASR Product List', 14, 15);
-
-    autoTable(doc, {
-      startY: 25,
-      head: [['S.No', 'Product Name', 'Product Price', 'Product Quantity']],
-      body: this.Customers.map((prod, i) => [
-        i + 1,
-        prod.Product_Name,
-        prod.Product_Price,
-        prod.Product_Quantity,
-      ]),
-      theme: 'grid',
-      headStyles: { fillColor: [40, 40, 40], textColor: [255, 255, 255] },
-      alternateRowStyles: { fillColor: [240, 240, 240] },
-      styles: { fontSize: 11 },
-    });
-    this.usercount++;
-    doc.save('ASR_Products_' + 'customer_' + this.usercount + '.pdf');
+  formatDate(date: any): string {
+    if (!date) return '—';
+    const d = new Date(date);
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const year = String(d.getFullYear()).slice(-2);
+    return `${day}/${month}/${year}`;
   }
+
+exportToPDF(): void {
+  const doc = new jsPDF();
+  const NotoSansTamilBase64 =''
+  // Add Tamil font from Base64
+  doc.addFileToVFS('NotoSansTamil-normal.ttf', NotoSansTamilBase64);
+  doc.addFont('NotoSansTamil-normal.ttf', 'NotoSansTamil', 'normal');
+  doc.setFont('NotoSansTamil');
+
+  // Title
+  doc.setFontSize(18);
+  doc.text('ASR Product List', 14, 15);
+
+  // Prepare table body with formatted date
+  const bodyData = this.Customers.map((prod, i) => [
+    i + 1,
+    prod.Product_Name,
+    prod.Product_Quantity,
+    prod.Product_Price,
+    this.formatDate(prod.Date)
+  ]);
+
+  // Add total row at the end
+  const totalAmount = this.getTotalPrice();
+  bodyData.push([
+    { content: 'Total Amount ', colSpan: 4, styles: { halign: 'center', fontStyle: 'bold' } },
+    { content: `Rs. ${totalAmount}`, styles: { halign: 'center', fontStyle: 'bold' } }
+  ]);
+
+  // Create table
+  autoTable(doc, {
+    startY: 25,
+    head: [['S.No', 'Product Name', 'Quantity', 'Price', 'Date']],
+    body: bodyData,
+    theme: 'grid',
+    headStyles: { fillColor: [40, 40, 40], textColor: [255, 255, 255] },
+    alternateRowStyles: { fillColor: [240, 240, 240] },
+    styles: { fontSize: 11, font: 'NotoSansTamil' },
+  });
+
+  this.usercount++;
+  doc.save(`ASR_Products_customer_${this.usercount}.pdf`);
+}
+
 
   searchTerm: string = '';
 
@@ -142,12 +169,9 @@ export class SignUpComponent implements OnInit {
   }
 
   getTotalPrice(): number {
-    return this.filteredProducts().reduce((sum, p) => sum + Number(p.Product_Price), 0);
+    return this.filteredProducts().reduce(
+      (sum, p) => sum + Number(p.Product_Price),
+      0
+    );
   }
-
-
-
-
-
-  
 }
