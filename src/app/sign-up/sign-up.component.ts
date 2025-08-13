@@ -96,17 +96,11 @@ export class SignUpComponent implements OnInit {
     const day = String(d.getDate()).padStart(2, '0');
     const month = String(d.getMonth() + 1).padStart(2, '0');
     const year = String(d.getFullYear()).slice(-2);
-    return `${day}/${month}/${year}`;
+    return `${day}-${month}-${year}`;
   }
 
 exportToPDF(): void {
   const doc = new jsPDF();
-  const NotoSansTamilBase64 =''
-  // Add Tamil font from Base64
-  doc.addFileToVFS('NotoSansTamil-normal.ttf', NotoSansTamilBase64);
-  doc.addFont('NotoSansTamil-normal.ttf', 'NotoSansTamil', 'normal');
-  doc.setFont('NotoSansTamil');
-
   // Title
   doc.setFontSize(18);
   doc.text('ASR Product List', 14, 15);
@@ -114,10 +108,11 @@ exportToPDF(): void {
   // Prepare table body with formatted date
   const bodyData = this.Customers.map((prod, i) => [
     i + 1,
+    this.formatDate(prod.Date),
     prod.Product_Name,
     prod.Product_Quantity,
     prod.Product_Price,
-    this.formatDate(prod.Date)
+    
   ]);
 
   // Add total row at the end
@@ -130,12 +125,12 @@ exportToPDF(): void {
   // Create table
   autoTable(doc, {
     startY: 25,
-    head: [['S.No', 'Product Name', 'Quantity', 'Price', 'Date']],
+    head: [['S.No', 'Date', 'Product Name', 'Quantity', 'Price']],
     body: bodyData,
     theme: 'grid',
     headStyles: { fillColor: [40, 40, 40], textColor: [255, 255, 255] },
     alternateRowStyles: { fillColor: [240, 240, 240] },
-    styles: { fontSize: 11, font: 'NotoSansTamil' },
+    styles: { fontSize: 11 },
   });
 
   this.usercount++;
