@@ -88,6 +88,17 @@ mark {
   padding: 0 2px;
   border-radius: 2px;
 }
+.amount{
+  padding-right: 200px;
+}
+
+/* Remove arrows in Chrome, Safari, Edge, and Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 
 /* Mobile specific */
 @media (max-width: 576px) {

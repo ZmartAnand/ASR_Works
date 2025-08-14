@@ -25,9 +25,15 @@
 
       <div class="mb-3">
         <label for="productdate" class="form-label">Date</label>
-        <input type="date" id="productdate" placeholder="dd/mm/yy" class="form-control dark-input" [(ngModel)]="ProductDate"
-          name="productdate">
+        <input type="date" id="productdate" placeholder="dd/mm/yy" class="form-control dark-input"
+          [(ngModel)]="ProductDate" name="productdate">
       </div>
+
+      <!-- <div class="mb-3">
+        <label for="income" class="form-label">Income Amount</label>
+        <input type="text" id="income" placeholder="amount" class="form-control dark-input" [(ngModel)]="incomeAmount"
+          name="income">
+      </div> -->
 
       <button type="button" class="btn btn-accent w-100 mt-2" (click)="save()">
         {{ isEditMode ? 'Update' : 'Save' }}
@@ -35,9 +41,26 @@
     </form>
   </div>
 
+  <div class="card neon-card text-white p-4 border-0 w-100 mt-3" style="max-width: 420px;">
+    <form>
+       <div>
+        <label for="customername">Customer Name</label>
+        <input type="text" id="customername" placeholder="Enter customer name" class="form-control dark-input"
+          [(ngModel)]="customername" name="customername">
+      </div>
+
+      <div class="mt-4">
+        <label for="income">Income Amount</label>
+        <input type="number" id="income" placeholder="Amount" class="form-control dark-input"
+          [(ngModel)]="incomeAmount" name="income">
+      </div>
+
+    </form>
+  </div>
+
+
   <div class="mt-4 w-100" style="max-width: 900px;">
     <section hidden id="tablesection">
-
       <div class="mb-3 d-flex gap-2 flex-wrap">
         <input type="text" class="form-control bg-black text-white" placeholder="Search product name"
           [(ngModel)]="searchTerm" />
@@ -68,13 +91,22 @@
               <td>{{ product.Product_Quantity || '-' }}</td>
               <td>{{ product.Product_Price }}</td>
               <td class="">
-                  <i class="bi bi-pencil-square text-success p-1" (click)="editProduct(product)"></i>
-                  <i class="bi bi-trash text-danger p-1" (click)="deleteProduct(product.id)"></i>  
+                <i class="bi bi-pencil-square text-success p-1" (click)="editProduct(product)"></i>
+                <i class="bi bi-trash text-danger p-1" (click)="deleteProduct(product.id)"></i>
               </td>
             </tr>
             <tr>
               <td colspan="3"><strong>Total Amount (₹) </strong></td>
               <td colspan="3" style="padding-right:56px;">Rs.{{ getTotalPrice() }}</td>
+            </tr>
+            <tr>
+              <td colspan="3"><strong>Income Amount (₹)</strong></td>
+              <td colspan="3" style="padding-right:56px;">Rs.{{ incomeAmount }}</td>
+            </tr>
+
+            <tr>
+              <td colspan="3"><strong>Remaining Amount (₹)</strong></td>
+              <td colspan="3" style="padding-right:56px;">Rs.{{ getRemainingAmount() }}</td>
             </tr>
           </tbody>
         </table>
