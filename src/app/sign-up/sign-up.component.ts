@@ -22,7 +22,7 @@ export class SignUpComponent implements OnInit {
   existingCreatedAt: any = null;
   Customers: any[] = [];
   ProductDate: string = '';
-  incomeAmount = '';
+  advanceAmount = '';
   usercount: number = 1;
   customername = '';
   constructor(private authService: AuthService) {}
@@ -49,7 +49,6 @@ export class SignUpComponent implements OnInit {
       Product_Price: this.ProductPrice,
       Product_Quantity: +this.ProductQuantity,
       Date: this.ProductDate || '',
-      Income: this.incomeAmount,
       createdAt: this.existingCreatedAt || serverTimestamp(),
     };
 
@@ -72,7 +71,6 @@ export class SignUpComponent implements OnInit {
     this.ProductPrice = product.Product_Price;
     this.ProductQuantity = product.Product_Quantity;
     this.ProductDate = product.Date || '';
-    this.incomeAmount = product.Income;
     this.productIdToEdit = product.id;
     this.existingCreatedAt = product.createdAt; // store original timestamp
     this.isEditMode = true;
@@ -90,7 +88,7 @@ export class SignUpComponent implements OnInit {
     this.ProductPrice = '';
     this.ProductQuantity = '';
     this.ProductDate = '';
-    this.incomeAmount = '';
+    this.advanceAmount = '';
     this.isEditMode = false;
     this.productIdToEdit = null;
     this.existingCreatedAt = null;
@@ -138,7 +136,7 @@ export class SignUpComponent implements OnInit {
 
   getRemainingAmount(): number {
     const totalPrice = this.getTotalPrice();
-    const income = Number(this.incomeAmount) || 0; // ensure number 
+    const income = Number(this.advanceAmount) || 0; // ensure number 
     
     
     return  income -  totalPrice;
@@ -219,15 +217,15 @@ export class SignUpComponent implements OnInit {
       },
     ]);
 
-      const amount = this.incomeAmount;
+      const amount = this.advanceAmount;
     bodyData.push([
       {
-        content: 'Income Amount',
+        content: 'Advance Amount',
         colSpan: 4,
         styles: { halign: 'center', fontStyle: 'bold' },
       },
       {
-        content: `Rs. ${this.incomeAmount}`,
+        content: `Rs. ${this.advanceAmount}`,
         // styles: {
         //   halign: 'center',
         //   fontStyle: 'bold',
@@ -301,6 +299,6 @@ export class SignUpComponent implements OnInit {
 
     // === SAVE FILE ===
     this.usercount++;
-    doc.save(`ASR_Report_${this.usercount}.pdf`);
+    doc.save(`ASR_Bill_${this.customername}.pdf`);
   }
 }
