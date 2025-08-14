@@ -41,6 +41,11 @@ body {
   margin-top: 2rem;
 }
 
+.table{
+  width: 100%;
+  height: 400px;
+}
+
 .table-responsive {
   overflow-x: auto;
 }

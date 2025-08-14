@@ -48,7 +48,8 @@
       </div>
 
       <div class="table-responsive">
-        <table class="table table-dark table-striped table-bordered align-middle text-center">
+        <table class="table table-dark table-striped table-bordered align-middle text-center
+        ">
           <thead class="table-info text-dark">
             <tr>
               <th>S.No</th>
@@ -66,9 +67,9 @@
               <td [innerHTML]="highlightMatch(product.Product_Name, searchTerm)"></td>
               <td>{{ product.Product_Quantity || '-' }}</td>
               <td>{{ product.Product_Price }}</td>
-              <td class="d-flex gap-2">
-                  <i class="bi bi-pencil-square text-success" (click)="editProduct(product)"></i>
-                  <i class="bi bi-trash text-danger" (click)="deleteProduct(product.id)"></i>  
+              <td class="">
+                  <i class="bi bi-pencil-square text-success p-1" (click)="editProduct(product)"></i>
+                  <i class="bi bi-trash text-danger p-1" (click)="deleteProduct(product.id)"></i>  
               </td>
             </tr>
             <tr>
