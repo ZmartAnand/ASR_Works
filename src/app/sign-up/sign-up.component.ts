@@ -39,8 +39,8 @@ export class SignUpComponent implements OnInit {
   }
 
   save() {
-    if (!this.ProductName || !this.ProductPrice) {
-      alert('Please fill all fields');
+    if (!this.ProductName) {
+      alert('Please fill the product name fields');
       return;
     }
 

@@ -89,7 +89,7 @@
               <td>{{ product.Date ? (product.Date | date:'dd.MM.yy') : '-' }}</td>
               <td [innerHTML]="highlightMatch(product.Product_Name, searchTerm)"></td>
               <td>{{ product.Product_Quantity || '-' }}</td>
-              <td>{{ product.Product_Price }}</td>
+              <td>{{ product.Product_Price  || '-' }}</td>
               <td class="">
                 <i class="bi bi-pencil-square text-success p-1" (click)="editProduct(product)"></i>
                 <i class="bi bi-trash text-danger p-1" (click)="deleteProduct(product.id)"></i>
