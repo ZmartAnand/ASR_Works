@@ -25,7 +25,7 @@
 
       <div class="mb-3">
         <label for="productdate" class="form-label">Date</label>
-        <input type="date" id="productdate" placeholder="dd/mm/yy" class="form-control dark-input"
+        <input type="date" id="productdate" class="form-control dark-input"
           [(ngModel)]="ProductDate" name="productdate">
       </div>
 
@@ -41,8 +41,8 @@
     </form>
   </div>
 
-  <div class="card neon-card text-white p-4 border-0 w-100 mt-3" style="max-width: 420px;">
-    <form>
+  <div class="card neon-card text-white p-4 border-0 w-100 mt-3 bg-dark" style="max-width: 420px;">
+    <form autocomplete="off">
        <div>
         <label for="customername">Customer Name</label>
         <input type="text" id="customername" placeholder="Enter customer name" class="form-control dark-input"
@@ -100,7 +100,7 @@
               <td colspan="3" style="padding-right:56px;">Rs.{{ getTotalPrice() }}</td>
             </tr>
             <tr>
-              <td colspan="3"><strong>Income Amount (₹)</strong></td>
+              <td colspan="3"><strong>Advance Amount (₹)</strong></td>
               <td colspan="3" style="padding-right:56px;">Rs.{{ advanceAmount }}</td>
             </tr>
 
